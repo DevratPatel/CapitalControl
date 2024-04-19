@@ -1,6 +1,6 @@
 # CapitalControl
 
-<img align="center" src="./assets/capitalcontrol_logo.png" alt="logo" />
+<img align="center" src="./src/assets/capitalcontrol_logo.png" alt="logo" />
 
 > CapitalControl : Bank Management System
 
