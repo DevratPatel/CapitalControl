@@ -12,6 +12,7 @@ struct User {
 // Function prototypes
 void registerUser();
 void loginUser();
+void menu();
 void deposit(struct User *user);
 void withdraw(struct User *user);
 void interest(struct User *user);
@@ -20,18 +21,18 @@ void deleteAccount(struct User *user);
 // Global variables
 struct User users[100]; // Assuming maximum of 100 users
 int userCount = 0;
+int userPos = 0;
 
 int main() {
     int choice;
     do {
-        printf("\nCapitalControl\n\n");
-        printf("1. Register\n");
-        printf("2. Login\n");
-        printf("3. Deposit\n");
-        printf("4. Withdraw\n");
-        printf("5. Calculate Interest\n");
-        printf("6. Delete Account\n");
-        printf("7. Exit\n\n");
+        printf("\n|----------------------|\n");
+        printf("|    CapitalControl    |\n");
+        printf("|----------------------|\n");
+        printf("| 1. Register          |\n");
+        printf("| 2. Login             |\n");
+        printf("| 3. Exit              |\n");
+        printf("|----------------------|\n\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
@@ -43,24 +44,12 @@ int main() {
                 loginUser();
                 break;
             case 3:
-                deposit(&users[userCount]);
-                break;
-            case 4:
-                withdraw(&users[userCount]);
-                break;
-            case 5:
-                interest(&users[userCount]);
-                break;
-            case 6:
-                deleteAccount(&users[userCount]);
-                break;
-            case 7:
                 printf("\nExiting...\n");
                 break;
             default:
                 printf("Invalid choice\n");
         }
-    } while (choice != 7);
+    } while (choice != 3);
 
     return 0;
 }
@@ -84,6 +73,7 @@ void registerUser() {
     users[userCount].balance = 0.0;
     userCount++;
     printf("\nUser registered successfully.\n");
+
 }
 
 
@@ -98,11 +88,48 @@ void loginUser() {
     int i;
     for (i = 0; i < userCount; i++) {
         if (strcmp(username, users[i].username) == 0 && strcmp(password, users[i].password) == 0) {
-            printf("\nLogin successful. Welcome, %s!\n", users[i].username);
+            userPos = i;
+			printf("\nLogin successful. Welcome, %s!\n", users[i].username);
+			printf("Your balance is: $%.2lf\n",users[userPos].balance);
+			menu();
             return;
         }
     }
     printf("\nInvalid username or password.\n");
+}
+
+void menu(){
+	int choice2;
+
+	do{
+		printf("1. Deposit\n");
+		printf("2. Withdraw\n");
+        printf("3. Calculate Interest\n");
+        printf("4. Delete Account\n");
+        printf("5. Logout\n\n");
+		scanf("%d", &choice2);
+		
+		switch(choice2){
+			case 1:
+                deposit(&users[userPos]);
+                break;
+            case 2:
+                withdraw(&users[userPos]);
+                break;
+            case 3:
+                interest(&users[userPos]);
+                break;
+            case 4:
+                deleteAccount(&users[userPos]);
+                break;
+            case 5:
+                printf("\nLogging out...\n");
+                break;
+            default:
+                printf("Invalid choice\n");
+		}
+	}while((choice2 != 5) && (choice2 != 4));
+	return;
 }
 
 void deposit(struct User *user) {
@@ -127,6 +154,16 @@ void withdraw(struct User *user) {
 
 void interest(struct User *user) {
     // Implement interest calculation logic here
+	double interestrate;
+	double years;
+	double currentbalance = user->balance;
+	printf("Enter interest rate as a percentage\n");
+	scanf("%lf", &interestrate);
+	interestrate = interestrate*.01;
+	printf("Enter the amount of years interest will accrue\n");
+	scanf("%lf", &years);
+	double amount = currentbalance*interestrate*years;
+	printf("The amount of accrued interest over %n years is: $%.2lf\n",amount);
     printf("Interest calculated.\n");
 }
 
